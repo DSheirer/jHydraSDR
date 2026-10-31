@@ -34,8 +34,8 @@ dependencies {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    // The Foreign Function & Memory API became final in Java 22.
-    options.release = 22
+    // Java 23 is the newest Temurin release available on every CI platform.
+    options.release = 23
     options.encoding = "UTF-8"
     options.compilerArgs.addAll(listOf("-Xlint:all", "-Xlint:-restricted", "-Werror"))
 }

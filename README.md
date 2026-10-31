@@ -11,7 +11,7 @@ install.
 | macOS 11+ | ✓ | ✓ |
 | Windows | ✓ | ✓ |
 
-Requires Java 22 or later.
+Requires Java 23 or later.
 
 ## Getting it
 
@@ -82,7 +82,7 @@ mounted `noexec`.
 
 ## Building
 
-You need JDK 22+, CMake, a C compiler, make and git. On Windows use Visual Studio
+You need JDK 23+, CMake, a C compiler, make and git. On Windows use Visual Studio
 and 7-Zip.
 
 ```
