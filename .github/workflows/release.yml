@@ -1,6 +1,6 @@
 # Publishes a release when a version tag is pushed, built from the upstream
-# version pinned in native/versions.env. The tag has to match that pin: v1.1.3,
-# v1.1.3.1 for a Java-only fix, or v1.1.3-rc1 for a pre-release.
+# version pinned in native/versions.env. The tag has to match that pin: v1.1.4,
+# v1.1.4.1 for a Java-only fix, or v1.1.4-rc1 for a pre-release.
 name: Release
 
 on:

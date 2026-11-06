@@ -96,7 +96,7 @@ A local jar contains only your platform. The hardware tests are receive-only.
 
 ## Releases
 
-jHydraSDR versions follow upstream: jHydraSDR 1.1.3 wraps libhydrasdr 1.1.3. The
+jHydraSDR versions follow upstream: jHydraSDR 1.1.4 wraps libhydrasdr 1.1.4. The
 upstream version is pinned in [`native/versions.env`](native/versions.env), which
 is the only place the version is set.
 
@@ -107,10 +107,10 @@ is the only place the version is set.
 | Daily schedule | The same, if this project or upstream has changed |
 | Tag `vX.Y.Z` | Publishes a release built from the pinned upstream version |
 
-To release, tag the pinned version: `git tag v1.1.3 && git push origin v1.1.3`.
+To release, tag the pinned version: `git tag v1.1.4 && git push origin v1.1.4`.
 The workflow rejects a tag that does not match the pin. For a Java-only fix on
-the same upstream version add a fourth number, such as `v1.1.3.1`; for a
-pre-release add a suffix, such as `v1.1.3-rc1`.
+the same upstream version add a fourth number, such as `v1.1.4.1`; for a
+pre-release add a suffix, such as `v1.1.4-rc1`.
 
 To adopt a new upstream release, change `HYDRASDR_REF` in
 `native/versions.env`, which also moves the jHydraSDR version. If upstream added functions, the build lists them; add

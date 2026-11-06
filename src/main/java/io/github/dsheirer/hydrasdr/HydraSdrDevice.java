@@ -131,12 +131,22 @@ public final class HydraSdrDevice implements AutoCloseable {
         }
     }
 
-    /** Selects the format of delivered samples. */
+    /**
+     * Selects the format of delivered samples. Set it before {@link #startRx}:
+     * the driver rejects a change while streaming.
+     *
+     * @throws HydraSdrException with {@link HydraSdrError#BUSY} if the device is streaming
+     */
     public void setSampleType(SampleType type) throws HydraSdrException {
         check("hydrasdr_set_sample_type", Native.invoke(Native.SET_SAMPLE_TYPE, handle(), type.code()));
     }
 
-    /** Enables 12-bit USB packing; see {@link Capability#PACKING}. */
+    /**
+     * Enables 12-bit USB packing; see {@link Capability#PACKING}. Set it before
+     * {@link #startRx}: the driver rejects a change while streaming.
+     *
+     * @throws HydraSdrException with {@link HydraSdrError#BUSY} if the device is streaming
+     */
     public void setPacking(boolean enabled) throws HydraSdrException {
         check("hydrasdr_set_packing", Native.invoke(Native.SET_PACKING, handle(), flag(enabled)));
     }
