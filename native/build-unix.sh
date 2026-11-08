@@ -4,9 +4,9 @@
 #
 # Usage: native/build-unix.sh [hydrasdr-git-ref]
 #
-# libusb stays a separate shared library because it is LGPL-2.1: keeping it out
-# of libhydrasdr lets users replace it. It is built without udev so the Linux
-# binaries do not need libudev at runtime.
+# libusb is built only to link against: at runtime libhydrasdr uses the libusb
+# that jlibusb supplies, loaded from the same directory, so the jar does not
+# contain libusb. It is built without udev, as jlibusb's is.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -80,21 +80,19 @@ cmake --build build-hydrasdr --parallel "$JOBS" >/dev/null
 
 echo "=== packaging $PLATFORM ==="
 if [ "$OS" = linux ]; then
-    cp -L "$USB_PREFIX/lib/libusb-1.0.so.0" "$OUT/libusb-1.0.so.0"
     cp -L build-hydrasdr/src/libhydrasdr.so "$OUT/libhydrasdr.so"
     chmod 755 "$OUT"/*
     # Only glibc and libusb may remain as dependencies.
     readelf -d "$OUT/libhydrasdr.so" | grep -E 'NEEDED|RUNPATH|RPATH'
 else
-    cp -L "$USB_PREFIX/lib/libusb-1.0.0.dylib" "$OUT/libusb-1.0.0.dylib"
     cp -L build-hydrasdr/src/libhydrasdr.dylib "$OUT/libhydrasdr.dylib"
     chmod 755 "$OUT"/*
-    # Point libhydrasdr at the bundled libusb, not the absolute build path, and
-    # re-sign because install_name_tool invalidates the ad-hoc signatures.
-    install_name_tool -id @rpath/libusb-1.0.0.dylib "$OUT/libusb-1.0.0.dylib"
+    # Point libhydrasdr at jlibusb's libusb, which is extracted next to it, not
+    # the absolute build path, and re-sign because install_name_tool
+    # invalidates the ad-hoc signature.
     install_name_tool -id @rpath/libhydrasdr.dylib "$OUT/libhydrasdr.dylib"
     install_name_tool -change "$USB_LIB" @loader_path/libusb-1.0.0.dylib "$OUT/libhydrasdr.dylib"
-    codesign -f -s - "$OUT"/*.dylib
+    codesign -f -s - "$OUT/libhydrasdr.dylib"
     otool -L "$OUT/libhydrasdr.dylib"
 fi
 
@@ -106,7 +104,6 @@ if ! "$ROOT/native/check-bindings.sh" hydrasdr/libhydrasdr/src/hydrasdr.h; then
 fi
 
 cp hydrasdr/libhydrasdr/LICENSE.md "$ROOT/dist/native/licenses/libhydrasdr-LICENSE.md"
-cp "libusb-$LIBUSB_VERSION/COPYING" "$ROOT/dist/native/licenses/libusb-COPYING"
 cat > "$OUT/build-info.properties" <<INFO
 hydrasdr.ref=$REF
 hydrasdr.commit=$UPSTREAM_COMMIT
